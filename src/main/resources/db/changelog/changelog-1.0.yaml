@@ -1,0 +1,323 @@
+databaseChangeLog:
+  - preConditions:
+      - runningAs:
+          username: root
+
+  - changeSet:
+      id: create-tables
+      author: eskozloi
+      changes:
+        - createTable:
+            tableName: products
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    #unique: true
+              - column:
+                  name: name
+                  type: varchar(255)
+              - column:
+                  name: sku_code
+                  type: varchar(31)
+                  #unique: true
+                  constraints:
+                    nullable: false
+              - column:
+                  name: unit_price
+                  type: varchar(31)
+        - createTable:
+            tableName: customers
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    #unique: true
+              - column:
+                  name: registration_code
+                  type: varchar(31)
+                  constraints:
+                    nullable: false
+                    #unique: true
+              - column:
+                  name: full_name
+                  type: varchar(255)
+              - column:
+                  name: email
+                  type: varchar(255)
+                  #constraints:
+                    #unique: true
+              - column:
+                  name: telephone
+                  type: varchar(31)
+        - createTable:
+            tableName: orders
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    #unique: true
+              - column:
+                  name: customer_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: cid
+                    references: customers(id)
+              - column:
+                  name: submission_date
+                  type: date
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
+                  #type: timestamp
+                  #defaultValueComputed: CURRENT_TIMESTAMP
+        - createTable:
+            tableName: order_lines
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    #unique: true
+              - column:
+                  name: product_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: pid
+                    references: products(id)
+              - column:
+                  name: quantity
+                  type: int
+                  constraints:
+                    nullable: false
+              - column:
+                  name: order_id
+                  type: int
+                  constraints:
+                    nullable: false
+                    foreignKeyName: oid
+                    references: orders(id)
+  - changeSet:
+      id: add-unique-constraint
+      author: eskozloi
+      changes:
+        - addUniqueConstraint:
+            tableName: products
+            columnNames: id, sku_code
+            constraintName: uProductISc
+        - addUniqueConstraint:
+            tableName: customers
+            columnNames: id, registration_code, email
+            constraintName: uCustomerIRcE
+        - addUniqueConstraint:
+            tableName: orders
+            columnNames: id
+            constraintName: uOrderI
+        - addUniqueConstraint:
+            tableName: order_lines
+            columnNames: id
+            constraintName: uOrderLineI
+  - changeSet:
+      id: add-product
+      author: eskozloi
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: name
+                  value: Gvozd
+              - column:
+                  name: sku_code
+                  value: 5412f23a2
+              - column:
+                  name: unit_price
+                  value: 100.2
+            tableName: products
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: name
+                  value: Palka
+              - column:
+                  name: sku_code
+                  value: sd2321f21
+              - column:
+                  name: unit_price
+                  value: 0.21
+            tableName: products
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: name
+                  value: Nitka
+              - column:
+                  name: sku_code
+                  value: 153s23h2s
+              - column:
+                  name: unit_price
+                  value: 12.52
+            tableName: products
+  - changeSet:
+      id: add-customer
+      author: eskozloi
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: registration_code
+                  value: 12345
+              - column:
+                  name: full_name
+                  value: Fedex Daux
+              - column:
+                  name: email
+                  value: fedux@daux.com
+              - column:
+                  name: telephone
+                  value: +37212341234
+            tableName: customers
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: registration_code
+                  value: 10242
+              - column:
+                  name: full_name
+                  value: Some Name
+              - column:
+                  name: email
+                  value: name@some.com
+              - column:
+                  name: telephone
+                  value: +109871234
+            tableName: customers
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: registration_code
+                  value: sa123
+              - column:
+                  name: full_name
+                  value: Esko Zloi
+              - column:
+                  name: email
+                  value: esko@zloi.com
+              - column:
+                  name: telephone
+                  value: +732112342
+            tableName: customers
+  - changeSet:
+      id: add-order
+      author: eskozloi
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: customer_id
+                  value: 1
+            tableName: orders
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: customer_id
+                  value: 3
+            tableName: orders
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: customer_id
+                  value: 3
+            tableName: orders
+  - changeSet:
+      id: add-order_line
+      author: eskozloi
+      changes:
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 1
+              - column:
+                  name: product_id
+                  value: 1
+              - column:
+                  name: quantity
+                  value: 8
+              - column:
+                  name: order_id
+                  value: 1
+            tableName: order_lines
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 2
+              - column:
+                  name: product_id
+                  value: 2
+              - column:
+                  name: quantity
+                  value: 1
+              - column:
+                  name: order_id
+                  value: 2
+            tableName: order_lines
+        - insert:
+            columns:
+              - column:
+                  name: id
+                  value: 3
+              - column:
+                  name: product_id
+                  value: 1
+              - column:
+                  name: quantity
+                  value: 90
+              - column:
+                  name: order_id
+                  value: 3
+            tableName: order_lines
