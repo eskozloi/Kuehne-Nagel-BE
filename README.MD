@@ -2,9 +2,9 @@
 
 ## How-to
 
-1. **copy** project
-2. **change** properties in src/main/resources/**application.properties**
-3. **create** database
+1. **copy** this project
+2. **change** properties in the src/main/resources/**application.properties**
+3. **create** a database
 4. **have** **_fun_**
 
 ## Project Features
@@ -33,62 +33,62 @@
 
   - **id**(PK, AI, NotNull, int)
   - **name**(varchar(255))
-  - **skuCode**(Unique, varchar(31))
+  - **skuCode**(Unique, NotNull, varchar(31))
   - **unitPrice**(varchar(31))
 
 - **_Order_**
 
   - **id**(PK, AI, NotNull, int)
-  - **customerId**(int)
-  - **submissionDate**(date)
+  - **customerId**(NotNull, int) -> _Customer(id)_
+  - **submissionDate**(NotNull, date)
 
 - **_OrderLine_**
   - **id**(PK, AI, NotNull, int)
-  - **productId**(int)
-  - **quantity**(int)
-  - **orderId**(int)
+  - **productId**(NotNull, int) -> _Product(id)_
+  - **quantity**(NotNull, int)
+  - **orderId**(NotNull, int) -> _Order(id)_
 
 ### Controllers
 
-> Responsible for request handling
+> REST API requests handlers
 
-- **_CustomerController_** | **/customer** |
+- | **/customer** | **_CustomerController_**
 
-  - **getAllCustomers()** | **GET \*/** |
-  - **getCustomerById()** | **GET \*/{id}** | - takes **id** as an Integer
-  - **createCustomer()** | **POST \*/** | - takes JSON body as a **Customer**
+  - | **GET \*/** | **getAllCustomers()**
+  - | **GET \*/{id}** | **getCustomerById()** - takes **id** as an Integer
+  - | **POST \*/** | **createCustomer()** - takes JSON body as a **Customer**
 
-- **_ProductController_** | **/product** |
+- | **/product** | **_ProductController_**
 
-  - **getAllProducts()** | **GET \*/** |
-  - **getProductById()** | **GET \*/{id}** | - takes **id** as an Integer
-  - **createProduct()** | **POST \*/** | - takes JSON body as a **Product**
+  - | **GET \*/** | **getAllProducts()**
+  - | **GET \*/{id}** | **getProductById()** - takes **id** as an Integer
+  - | **POST \*/** | **createProduct()** - takes JSON body as a **Product**
 
-- **OrderController** | **/order** |
-  - **getAllOrders()** | **GET \*/** | - takes JSON body (not necessary)
-  - **getOrderById()** | **GET \*/{id}** | - takes **id** as an Integer
-  - **getOrderLinesByOrderId()** | **GET \*/{id}/line** | - takes **id** as an Integer
-  - **createOrder()** | **POST \*/** | - takes JSON body as a **Order**
-  - **getAllOrderLines()** | **GET \*/line** |
-  - **getOrderLineById()** | **GET \*/line/{id}** | - takes **id** as an Integer
-  - **updateOrderLineById()** | **PUT \*/line/{id}** | - takes **id** as an Integer and JSON body
-  - **createOrderLine()** | **POST \*/line** | - takes JSON body as a **OrderLine**
+- | **/order** | **OrderController**
+  - | **GET \*/** | **getAllOrders()** - takes JSON body (not necessary)
+  - | **GET \*/{id}** | **getOrderById()** - takes **id** as an Integer
+  - | **GET \*/{id}/line** | **getOrderLinesByOrderId()** - takes **id** as an Integer
+  - | **POST \*/** | **createOrder()** - takes JSON body as a **Order**
+  - | **GET \*/line** | **getAllOrderLines()**
+  - | **GET \*/line/{id}** | **getOrderLineById()** - takes **id** as an Integer
+  - | **PUT \*/line/{id}** | **updateOrderLineById()** - takes **id** as an Integer and JSON body
+  - | **POST \*/line** | **createOrderLine()** - takes JSON body as a **OrderLine**
 
 ### Services
 
-> Manipulates with its Model
+> Model data manipulators
 
-There are too many different functions and I am too lazy to write them all, but will say that they have **self-explanatory names** so you will instantly understand what they responsibilities are.
+There are too many different functions and I am too lazy to write them all, but will say that they have **self-explanatory names** so you will probably understand what their responsibilities are.
 
-Actualy will say one more thing - In **OrderController getAllOrders()** method can take JSON body and there is a reason for that - **deep sorting opportunity**. So you can search for **any** parrameters of **other** Models that anyhow connected to Order or OrderLine. e.g. -
+Actualy will say one more thing - In the **OrderController** the **getAllOrders()** method can take JSON body and there is a reason for that - **deep sorting opportunity**. So you can search by **any** parameters of that and **others** Models that are somehow related to Order or OrderLine. e.g. -
 ![filterExample](./gitsrc/filterExample.png)
 
 ### Repositories
 
-> Query level Model manipulating
+> Query-level Model data manipulators
 
-Repositories **closest** layer for Models manipulating, which is done with functions that _querying_ informations directly using SQL Queries.
+Repositories are the **closest** layer for Models manipulating, which is done through functions that _query_ information directly using SQL Queries.
 
 ## UnitTests
 
-> You can find REST API Unit Tests in src/**test**/java/com.fk.knp/**Controllers**
+> You can find REST API Unit Tests in the src/**test**/java/com.fk.knp/**Controllers**
